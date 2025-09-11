@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:social_app/models/post_model.dart';
 import 'package:social_app/models/posts_response.dart';
 import 'package:social_app/services/post_service.dart';
 import 'package:social_app/widgets/post_card.dart';
@@ -51,6 +52,21 @@ class _HomeScreenState extends State<HomeScreen> {
           isLoading = false;
         });
       }
+    }
+  }
+
+  void handleReaction(PostModel post, String reactionType) async {
+    try {
+      final res = await PostService.reactToPost(post, reactionType);
+      setState(() {
+        postsData!.posts[postsData!.posts.indexOf(post)].reactions.likes =
+            res.reactions.likes;
+        postsData!.posts[postsData!.posts.indexOf(post)].reactions.dislikes =
+            res.reactions.dislikes;
+      });
+      debugPrint('Reaction response: ${res.reactions.likes}');
+    } catch (e) {
+      print('Reaction error: $e');
     }
   }
 
@@ -182,7 +198,17 @@ class _HomeScreenState extends State<HomeScreen> {
                       : ListView.builder(
                           itemCount: postsData!.posts.length,
                           itemBuilder: (context, index) {
-                            return PostCard(post: postsData!.posts[index]);
+                            return PostCard(
+                              post: postsData!.posts[index],
+                              onLike: () => handleReaction(
+                                postsData!.posts[index],
+                                'like',
+                              ),
+                              onDislike: () => handleReaction(
+                                postsData!.posts[index],
+                                'dislike',
+                              ),
+                            );
                           },
                         ),
                 ),
