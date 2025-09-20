@@ -6,6 +6,7 @@ class PostModel {
   final Reactions reactions;
   final int views;
   final int userId;
+  final int commentCount;
 
   PostModel({
     required this.id,
@@ -15,6 +16,7 @@ class PostModel {
     required this.reactions,
     required this.views,
     required this.userId,
+    required this.commentCount,
   });
 
   factory PostModel.fromJson(Map<String, dynamic> json) {
@@ -29,6 +31,7 @@ class PostModel {
       ),
       views: json['views'] ?? 0,
       userId: json['userId'] ?? 0,
+      commentCount: json['commentCount'] ?? 0,
     );
   }
 }

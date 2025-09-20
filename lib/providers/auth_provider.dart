@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:social_app/models/auth_model.dart';
+import 'package:social_app/models/user_model.dart';
 import 'package:social_app/services/auth_service.dart';
 
 class AuthProvider extends ChangeNotifier {
-  AuthModel? _user;
+  UserModel? _user;
   bool _isLoading = false;
   String? _error;
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
 
-  AuthModel? get user => _user;
+  UserModel? get user => _user;
   bool get isLoading => _isLoading;
   String? get error => _error;
   bool get isLoggedIn => _user != null;

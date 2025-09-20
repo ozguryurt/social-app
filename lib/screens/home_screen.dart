@@ -4,6 +4,7 @@ import 'package:social_app/models/post_model.dart';
 import 'package:social_app/models/posts_response.dart';
 import 'package:social_app/services/post_service.dart';
 import 'package:social_app/widgets/post_card.dart';
+import 'package:social_app/widgets/comments_bottom_sheet.dart';
 import 'package:social_app/providers/auth_provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -95,38 +96,6 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text("Social App"),
         centerTitle: true,
         backgroundColor: Colors.transparent,
-        actions: [
-          PopupMenuButton<String>(
-            onSelected: (value) async {
-              if (value == 'logout') {
-                try {
-                  await authProvider.logout();
-                  // Router will automatically redirect to the login screen
-                } catch (e) {
-                  print('Logout error: $e');
-                }
-              }
-            },
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                value: 'logout',
-                child: Row(
-                  children: [
-                    Icon(Icons.logout, color: Colors.red[600]),
-                    const SizedBox(width: 8),
-                    Text('Logout', style: TextStyle(color: Colors.red[600])),
-                  ],
-                ),
-              ),
-            ],
-            child: CircleAvatar(
-              backgroundImage: NetworkImage(authProvider.user?.image ?? ''),
-              child: authProvider.user?.image == null
-                  ? Icon(Icons.person, color: Colors.white)
-                  : null,
-            ),
-          ),
-        ],
       ),
       body: SafeArea(
         child: Padding(
@@ -207,6 +176,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               onDislike: () => handleReaction(
                                 postsData!.posts[index],
                                 'dislike',
+                              ),
+                              onComment: () => showCommentsBottomSheet(
+                                context,
+                                postsData!.posts[index],
                               ),
                             );
                           },

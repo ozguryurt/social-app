@@ -1,10 +1,11 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:social_app/models/auth_model.dart';
+import 'package:social_app/models/user_model.dart';
 import 'package:social_app/utils/constants.dart';
+import 'package:social_app/models/login_request_model.dart';
 
 class AuthService {
-  static Future<AuthModel> login(String username, String password) async {
+  static Future<UserModel> login(String username, String password) async {
     try {
       final uri = Uri.parse('$baseUrl/auth/login');
       final response = await http
@@ -12,14 +13,17 @@ class AuthService {
             uri,
             headers: {'Content-Type': 'application/json'},
             body: json.encode(
-              LoginRequest(username: username, password: password).toJson(),
+              LoginRequestModel(
+                username: username,
+                password: password,
+              ).toJson(),
             ),
           )
           .timeout(const Duration(seconds: 25));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
-        return AuthModel.fromJson(data);
+        return UserModel.fromJson(data);
       } else {
         final errorData = json.decode(response.body);
         throw Exception(errorData['message'] ?? 'Login failed');
